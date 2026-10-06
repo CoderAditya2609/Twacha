@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Twacha
 
 Twacha is a personalized skincare-assistant demo built for a university assignment. It uses email sign-in, a Supabase database, streaming assistant replies, a controlled product catalogue, affiliate-click tracking, and an admin-only hypothetical earnings dashboard.
@@ -36,3 +37,6 @@ Never commit `.env.local`, your API key, or Supabase service-role key. They are 
 - The admin screen is protected by a server-verified email allow-list (`ADMIN_EMAILS`).
 - The `example.com` catalogue links are deliberate placeholders for the assignment. Replace only `affiliate_url` values in `data/products.json` if you later have real affiliate URLs.
 - The chat function uses a 60-second limit, the documented configurable maximum for a Hobby function when Fluid compute is not available. Keep assistant answers short to avoid timeouts.
+=======
+# Twacha
+>>>>>>> ce63b822c7aecaf94cb2387a2c3b0bbadcffefa8
