@@ -1,0 +1,101 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'vermaaditya2609@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['id']) &&
+        data.id is string && data.id.size() <= 128 &&
+        (!('email' in data) || (data.email is string && data.email.size() <= 256)) &&
+        (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 128)) &&
+        (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 512));
+    }
+
+    function isValidProfile(data) {
+      return data.keys().hasAll(['id']) &&
+        data.id is string && data.id.size() <= 128 &&
+        (!('age' in data) || data.age == null || data.age is number) &&
+        (!('skin_type' in data) || (data.skin_type is string && data.skin_type.size() <= 64)) &&
+        (!('acne_level' in data) || (data.acne_level is string && data.acne_level.size() <= 64)) &&
+        (!('acne_type' in data) || (data.acne_type is string && data.acne_type.size() <= 64)) &&
+        (!('allergies' in data) || (data.allergies is string && data.allergies.size() <= 512)) &&
+        (!('current_routine' in data) || (data.current_routine is string && data.current_routine.size() <= 1024)) &&
+        (!('budget' in data) || (data.budget is string && data.budget.size() <= 64)) &&
+        (!('climate' in data) || (data.climate is string && data.climate.size() <= 64)) &&
+        (!('main_concerns' in data) || (data.main_concerns is list && data.main_concerns.size() <= 20));
+    }
+
+    function isValidMessage(data) {
+      return data.keys().hasAll(['user_id', 'role', 'content']) &&
+        data.user_id is string && data.user_id.size() <= 128 &&
+        data.role in ['user', 'assistant'] &&
+        data.content is string && data.content.size() <= 10000;
+    }
+
+    function isValidClick(data) {
+      return data.keys().hasAll(['product_id']) &&
+        data.product_id is string && data.product_id.size() <= 128 &&
+        (!('user_id' in data) || data.user_id == null || (data.user_id is string && data.user_id.size() <= 128));
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if (isOwner(userId) || isAdmin()) && isValidUser(incoming());
+      allow delete: if isAdmin();
+    }
+
+    match /profiles/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && isValidProfile(incoming());
+      allow update: if (isOwner(userId) || isAdmin()) && isValidProfile(incoming());
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+
+    match /messages/{messageId} {
+      allow get, list: if isSignedIn() && (resource.data.user_id == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && incoming().user_id == request.auth.uid && isValidMessage(incoming());
+      allow delete: if isSignedIn() && (resource.data.user_id == request.auth.uid || isAdmin());
+    }
+
+    match /clicks/{clickId} {
+      allow create: if isValidClick(incoming());
+      allow get, list: if isAdmin();
+    }
+
+    match /test/{docId} {
+      allow get: if true;
+    }
+  }
+}

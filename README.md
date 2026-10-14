@@ -1,42 +1,42 @@
-<<<<<<< HEAD
-# Twacha
+# Twacha Skincare Atelier
 
-Twacha is a personalized skincare-assistant demo built for a university assignment. It uses email sign-in, a Supabase database, streaming assistant replies, a controlled product catalogue, affiliate-click tracking, and an admin-only hypothetical earnings dashboard.
+Twacha is a luxury personalized skincare advisory application. It pairs clinical intelligence with bespoke formulations, honest actives, curated product recommendations, and real AI vision skin analysis.
 
-## 1. Set up Supabase
+## Key Features
 
-1. In your Supabase project, open **SQL Editor** in the left sidebar.
-2. Select **New query**.
-3. Open this project's `supabase.sql`, copy everything in it, paste it into the editor, and click **Run**. This creates the profile, message and click tables with security rules.
-4. Open **Authentication → Providers → Email**. For this demo, turn off **Confirm email** so sign-up works immediately. (Keep it enabled in a real public app.)
-5. Open **Project Settings → API**. Copy the Project URL, anon/public key, and service-role key. The service-role key is secret: do not put it in browser code or share it.
+- **AI Vision Skin Observation**: Real-time visual analysis of user-submitted skin photos. Uses genuine multimodal AI models to observe skin type, acne levels, barrier concerns, and red flags without diagnosing disease. Photos are processed in memory and never stored on disk or databases.
+- **Two-Step Safety Gate**: Deterministic clinical safety rules activate when severe acne, cysts/nodules, red flags, or pregnancy/prescription flags are detected. Safety mode directs users to consult a dermatologist and restricts recommendations to gentle non-active basics (cleanser, barrier moisturizer, broad-spectrum sunscreen).
+- **Personalized Streamed Consultations**: Natural, streaming dermatological guidance tailored to user skin profiles, climate, allergies, and curated catalog products.
+- **Curated Catalogue**: Clinically formulated cleansers, serums, moisturizers, and sunscreens with ingredient breakdowns and transparent advice.
+- **Client-Side Optimization**: Photos are automatically resized to a maximum of 1024px and compressed before uploading to minimize payload size and stay within serverless execution limits.
 
-## 2. Configure locally
+## 1. Setup & Environment
 
-1. Duplicate `.env.example` and name the copy `.env.local`.
-2. Fill in every Supabase value from the previous section.
-3. Choose an assistant provider by setting `AI_PROVIDER` to `openai`, `gemini`, or `nvidia`, then add your own `AI_API_KEY` and compatible `AI_MODEL`.
-4. Set `ADMIN_EMAILS` to the email address you will use to make your account (comma-separate multiple addresses).
-5. In a terminal in this folder, run `npm install` and then `npm run dev`.
-6. Open the local address shown in the terminal, create an account, complete the profile, and test the chat.
+1. Duplicate `.env.example` and name the copy `.env.local`:
+   ```bash
+   cp .env.example .env.local
+   ```
+2. Configure your AI provider and model:
+   - **`AI_PROVIDER`**: `gemini`, `openai`, or `nvidia`.
+   - **`AI_MODEL`**: **Must be a vision-capable model** to support photo skin analysis:
+     - **Gemini**: `gemini-2.5-flash`, `gemini-3.8-flash`, `gemini-3.1-flash-lite`, or `gemini-flash-latest`.
+     - **OpenAI**: `gpt-4o`, `gpt-4o-mini`, or `gpt-4-turbo`.
+     - **Nvidia**: `meta/llama-3.2-11b-vision-instruct` or other vision-capable NIM models.
+   - **`AI_API_KEY`** or **`GEMINI_API_KEY`**: Set your server-side secret API key.
 
-Never commit `.env.local`, your API key, or Supabase service-role key. They are already ignored by Git.
+3. Optional: Set `ADMIN_EMAILS` (comma-separated email list) for administrator dashboard access.
 
-## 3. Deploy on Vercel
+## 2. Local Development
 
-1. Create a **private** GitHub repository and push this whole project to it.
-2. In Vercel, choose **Add New → Project**, import that GitHub repository, and leave the framework preset as **Next.js**.
-3. Before the first deployment, open **Project Settings → Environment Variables** and add every variable shown in `.env.example`, with your real values. Add them to Production, Preview and Development if offered.
-4. Deploy. Vercel will build the app automatically.
-5. Each time you change an environment variable, go to **Deployments** and redeploy; changing it alone does not update an existing deployment.
-6. Use a fresh test email to test sign-up, onboarding, chat, products, product links and the admin page.
+```bash
+npm install
+npm run dev
+```
 
-## Notes
+Open [http://localhost:3000](http://localhost:3000) to access the application.
 
-- Assistant messages are limited to 30 user messages per account per day.
-- The admin screen is protected by a server-verified email allow-list (`ADMIN_EMAILS`).
-- The `example.com` catalogue links are deliberate placeholders for the assignment. Replace only `affiliate_url` values in `data/products.json` if you later have real affiliate URLs.
-- The chat function uses a 60-second limit, the documented configurable maximum for a Hobby function when Fluid compute is not available. Keep assistant answers short to avoid timeouts.
-=======
-# Twacha
->>>>>>> ce63b822c7aecaf94cb2387a2c3b0bbadcffefa8
+## 3. API Routes
+
+- `POST /api/analyze`: Multimodal skin observation endpoint (Node.js runtime, maxDuration: 60s). Verifies user authorization, validates image MIME and size (max 3 MB), applies rate limiting (max 10 analyses per user per day), generates structured observation JSON, applies the safety layer, and streams tailored catalog guidance.
+- `POST /api/chat`: Text consultation chat endpoint with streaming advice and catalog matching.
+- `GET /api/admin`: Administrative metrics dashboard.

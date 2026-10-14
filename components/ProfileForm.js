@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { getSupabaseBrowser } from "@/lib/supabase/client";
+import { auth, db, handleFirestoreError, OperationType } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import Field from "@/components/ui/Field";
 import Chip from "@/components/ui/Chip";
 import Button from "@/components/ui/Button";
@@ -51,52 +53,58 @@ function waterNumber(value) {
 export default function ProfileForm({ editing = false }) {
   const [form, setForm] = useState(blank);
   const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(editing);
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [done, setDone] = useState(false);
   const set = (key, value) => setForm((f) => ({ ...f, [key]: value }));
 
   useEffect(() => {
-    if (!editing) return;
-    const s = getSupabaseBrowser();
-    s.auth.getUser().then(async ({ data: { user } }) => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         location.href = "/login";
         return;
       }
-      const { data } = await s.from("profiles").select("*").eq("id", user.id).maybeSingle();
-      if (data) setForm({ ...blank, ...data });
-      setLoading(false);
+      try {
+        const snap = await getDoc(doc(db, "profiles", user.uid));
+        if (snap.exists()) {
+          setForm({ ...blank, ...snap.data() });
+        }
+      } catch (err) {
+        console.warn("Could not load profile:", err);
+      } finally {
+        setLoading(false);
+      }
     });
-  }, [editing]);
+    return () => unsub();
+  }, []);
 
   async function save() {
     setMessage("");
-    const s = getSupabaseBrowser();
-    const {
-      data: { user },
-    } = await s.auth.getUser();
+    const user = auth.currentUser;
     if (!user) {
       location.href = "/login";
       return;
     }
     const payload = {
       ...form,
-      id: user.id,
+      id: user.uid,
       age: Number(form.age) || null,
       height_cm: Number(form.height_cm) || null,
       weight_kg: Number(form.weight_kg) || null,
       sleep_hours: Number(form.sleep_hours) || null,
+      updatedAt: new Date().toISOString(),
     };
-    const { error } = await s.from("profiles").upsert(payload);
-    if (error) {
-      setMessage(error.message);
-      return;
+    try {
+      await setDoc(doc(db, "profiles", user.uid), payload, { merge: true });
+      setDone(true);
+      setTimeout(() => {
+        location.href = "/chat";
+      }, 1600);
+    } catch (error) {
+      console.error("Save profile error:", error);
+      setMessage(error.message || "Failed to save profile. Please try again.");
+      handleFirestoreError(error, OperationType.WRITE, `profiles/${user.uid}`);
     }
-    setDone(true);
-    setTimeout(() => {
-      location.href = "/chat";
-    }, 1600);
   }
 
   if (loading) return <Card>Loading your profile…</Card>;

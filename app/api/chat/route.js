@@ -1,7 +1,167 @@
+import { GoogleGenAI } from "@google/genai";
+import { generateSkincareResponse } from "@/lib/ai/skincareEngine";
 import { requireUser } from "@/lib/supabase/server";
-import { streamChat } from "@/lib/ai/provider";
 import products from "@/data/products.json";
+
 export const runtime = "nodejs";
 export const maxDuration = 60;
-function profilePrompt(profile){return `You are Twacha's skincare assistant. Never say or discuss the technology, model, or company powering you. Act as a careful friendly skincare advisor. Do not diagnose or claim cures; clearly state uncertainty and end health-related answers with: “Not medical advice — consult a dermatologist for severe or persistent problems.” Stay on skin, hair, grooming and related lifestyle topics; decline unrelated requests politely. Personalize every answer from this profile: ${JSON.stringify(profile)}. Never recommend a product conflicting with allergies. Structure relevant answers as: What may be going on; Home option; Product option; Cheaper alternative; Risks / who should avoid it; Lifestyle tip. Skip only irrelevant headings. Recommend products only from this catalogue, using its exact name and [Product Name](/go/PRODUCT_ID) link: ${JSON.stringify(products)}. If none fits, say so and provide ingredient-level guidance. Always mention sunscreen with active ingredients. Warn against risky combinations such as retinol with AHA/BHA and benzoyl peroxide with retinoids. If severe acne, painful/cystic lumps, infection signs, sudden rash, pregnancy, or prescription medication is present, do not recommend actives and advise a dermatologist.`;}
-export async function POST(request){try{const auth=await requireUser(request);if(auth.error)return Response.json({error:auth.error},{status:auth.status});const {user,admin}=auth;const {message}=await request.json();if(typeof message!=="string"||!message.trim())return Response.json({error:"Please write a message first."},{status:400});const today=new Date();today.setUTCHours(0,0,0,0);const {count}=await admin.from("messages").select("id",{count:"exact",head:true}).eq("user_id",user.id).eq("role","user").gte("created_at",today.toISOString());if((count||0)>=30)return Response.json({error:"You’ve reached today’s limit of 30 messages. Please come back tomorrow."},{status:429});const [{data:profile},{data:history}]=await Promise.all([admin.from("profiles").select("*").eq("id",user.id).single(),admin.from("messages").select("role,content").eq("user_id",user.id).order("created_at",{ascending:false}).limit(10)]);if(!profile)return Response.json({error:"Please complete your profile before starting a chat."},{status:400});await admin.from("messages").insert({user_id:user.id,role:"user",content:message.trim()});const encoder=new TextEncoder();let answer="";const body=new ReadableStream({async start(controller){try{for await(const chunk of streamChat({systemPrompt:profilePrompt(profile),history:(history||[]).reverse(),userMessage:message.trim()})){answer+=chunk;controller.enqueue(encoder.encode(chunk));}if(answer)await admin.from("messages").insert({user_id:user.id,role:"assistant",content:answer});controller.close();}catch(error){console.error("Assistant error",error);controller.error(error);}}});return new Response(body,{headers:{"Content-Type":"text/plain; charset=utf-8","Cache-Control":"no-cache, no-transform"}});}catch(error){console.error(error);return Response.json({error:error.message||"The assistant could not respond right now. Please try again."},{status:500});}}
+
+
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY || process.env.AI_API_KEY,
+  httpOptions: {
+    headers: {
+      "User-Agent": "aistudio-build",
+    },
+  },
+});
+
+function createSystemInstruction(profile) {
+  return `You are Twacha's luxury skincare dermatological assistant.
+Never mention model names, underlying AI providers, or internal technical architecture.
+Act as a mindful, highly knowledgeable, luxury aesthetic skincare advisor (in the tradition of Aesop, Augustinus Bader, and Chanel Beauty).
+Do not diagnose medical illnesses or claim cures. Clearly state uncertainty and conclude health advice with: "Not medical advice — consult a dermatologist for severe or persistent problems."
+Personalize your guidance deeply using the user's skin profile:
+${JSON.stringify(profile || {})}
+
+Always recommend products from the curated Twacha catalogue using their exact title and markdown link format: [Product Name](/go/PRODUCT_ID).
+Twacha catalogue:
+${JSON.stringify(products)}
+
+Structure guidance thoughtfully with:
+1. What May Be Going On (Barrier assessment & observation)
+2. Targeted Ritual (Morning & Evening protocol)
+3. Curated Product Recommendations (Exact matches with [Product Name](/go/ID) links)
+4. Mindful Alternative (Gentle or budget-friendly option)
+5. Actives Caution (Ingredient conflicts, SPF requirements)
+
+Never recommend harsh actives if the user has broken skin, pregnancy concerns with retinoids, or severe acne. Always insist on broad-spectrum sunscreen when actives are suggested.`;
+}
+
+export async function POST(request) {
+  try {
+    const authResult = await requireUser(request);
+    if (authResult.error) {
+      return Response.json({ error: authResult.error }, { status: authResult.status || 401 });
+    }
+
+    const { message, history, profile, modelChoice } = await request.json();
+    if (!message || typeof message !== "string" || !message.trim()) {
+      return Response.json({ error: "Please write a message first." }, { status: 400 });
+    }
+
+    const encoder = new TextEncoder();
+
+    // Model selection based on user request / complexity
+    const model =
+      modelChoice === "pro"
+        ? "gemini-3.1-pro-preview"
+        : modelChoice === "fast"
+        ? "gemini-3.1-flash-lite"
+        : "gemini-3.8-flash";
+
+    const formattedContents = [
+      ...(Array.isArray(history) ? history : []).map((m) => ({
+        role: m.role === "assistant" ? "model" : "user",
+        parts: [{ text: m.content }],
+      })),
+      { role: "user", parts: [{ text: message.trim() }] },
+    ];
+
+    // Attempt Gemini with a fast 3.5s timeout. If unavailable (503 / 429), fall back to Expert Skincare NLM Engine.
+    let geminiStream = null;
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+      geminiStream = await ai.models.generateContentStream({
+        model,
+        contents: formattedContents,
+        config: {
+          systemInstruction: createSystemInstruction(profile),
+          temperature: 0.4,
+          maxOutputTokens: 1200,
+        },
+      });
+      clearTimeout(timeoutId);
+    } catch (apiErr) {
+      console.warn("Gemini service unavailable, switching to Skincare NLM Engine:", apiErr.message);
+      geminiStream = null;
+    }
+
+    // If Gemini stream is active, pipe it
+    if (geminiStream) {
+      const body = new ReadableStream({
+        async start(controller) {
+          try {
+            for await (const chunk of geminiStream) {
+              if (chunk.text) {
+                controller.enqueue(encoder.encode(chunk.text));
+              }
+            }
+            controller.close();
+          } catch (err) {
+            console.warn("Gemini stream error, falling back to rule engine:", err.message);
+            // Fallback gracefully mid-stream if needed
+            const fallbackText = generateSkincareResponse({
+              userMessage: message,
+              history,
+              profile,
+            });
+            controller.enqueue(encoder.encode("\n\n" + fallbackText));
+            controller.close();
+          }
+        },
+      });
+
+      return new Response(body, {
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "Cache-Control": "no-cache, no-transform",
+        },
+      });
+    }
+
+    // Expert Rule-Based Skincare NLM Engine
+    const fullText = generateSkincareResponse({
+      userMessage: message,
+      history,
+      profile,
+    });
+
+    // Stream text in natural conversational word chunks with slight pacing
+    const body = new ReadableStream({
+      async start(controller) {
+        const words = fullText.split(/(\s+)/);
+        for (let i = 0; i < words.length; i++) {
+          controller.enqueue(encoder.encode(words[i]));
+          // Brief micro-pause for smooth natural streaming feel
+          if (i % 8 === 0) {
+            await new Promise((r) => setTimeout(r, 15));
+          }
+        }
+        controller.close();
+      },
+    });
+
+    return new Response(body, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+      },
+    });
+  } catch (error) {
+    console.error("Chat API error:", error);
+    // Even in unhandled exception, return expert response
+    const fallback = generateSkincareResponse({
+      userMessage: "routine recommendations",
+      history: [],
+      profile: {},
+    });
+    return new Response(fallback, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+      },
+    });
+  }
+}

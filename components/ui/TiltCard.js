@@ -15,13 +15,15 @@ export default function TiltCard({ children, className = "" }) {
     const y = (e.clientY - r.top) / r.height;
     const rx = (0.5 - y) * 10;
     const ry = (x - 0.5) * 12;
+    el.style.transition = "transform 0.1s ease-out";
     el.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
     el.style.setProperty("--gx", `${x * 100}%`);
     el.style.setProperty("--gy", `${y * 100}%`);
   }
   function leave() {
     if (!ref.current) return;
-    ref.current.style.transform = "perspective(800px) rotateX(0) rotateY(0)";
+    ref.current.style.transition = "transform 0.5s cubic-bezier(0.2, 0, 0.2, 1)";
+    ref.current.style.transform = "perspective(800px) rotateX(0) rotateY(0) translateY(0)";
   }
 
   return (

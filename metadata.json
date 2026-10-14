@@ -1,0 +1,8 @@
+{
+  "name": "Twacha Skincare",
+  "description": "Personalized luxury skincare guidance with tailored routines and curated formulations.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -26,7 +26,7 @@ export default function ProductsView() {
         {list.map((p, i) => (
           <motion.div key={p.id} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
             <TiltCard className="product-card">
-              <ProductVisual brand={p.brand} category={p.category} name={p.name} />
+              <ProductVisual id={p.id} brand={p.brand} category={p.category} name={p.name} />
               <span className="tag">{p.category}</span>
               <div>
                 <h2>{p.name}</h2>

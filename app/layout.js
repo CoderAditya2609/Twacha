@@ -16,8 +16,12 @@ const sans = Jost({
 });
 
 export const metadata = {
-  title: "Twacha | Personal skincare guidance",
-  description: "Personalized skincare guidance",
+  title: "Twacha Skincare",
+  description: "Personalized luxury skincare guidance with tailored routines and curated formulations.",
+  openGraph: {
+    title: "Twacha Skincare",
+    description: "Personalized luxury skincare guidance with tailored routines and curated formulations.",
+  },
 };
 
 export default function RootLayout({ children }) {

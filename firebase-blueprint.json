@@ -1,0 +1,90 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Public user profile and metadata",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "photoURL": { "type": "string", "maxLength": 512 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "email"]
+    },
+    "Profile": {
+      "title": "Profile",
+      "description": "Personalized skincare diagnostic profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "age": { "type": "number" },
+        "gender": { "type": "string", "maxLength": 64 },
+        "height_cm": { "type": "number" },
+        "weight_kg": { "type": "number" },
+        "activity_level": { "type": "string", "maxLength": 32 },
+        "sleep_hours": { "type": "number" },
+        "water_intake": { "type": "string", "maxLength": 64 },
+        "diet_type": { "type": "string", "maxLength": 64 },
+        "stress_level": { "type": "string", "maxLength": 32 },
+        "skin_type": { "type": "string", "maxLength": 32 },
+        "acne_level": { "type": "string", "maxLength": 32 },
+        "acne_type": { "type": "string", "maxLength": 64 },
+        "main_concerns": { "type": "array" },
+        "allergies": { "type": "string", "maxLength": 512 },
+        "current_routine": { "type": "string", "maxLength": 1024 },
+        "climate": { "type": "string", "maxLength": 32 },
+        "budget": { "type": "string", "maxLength": 32 },
+        "preference": { "type": "string", "maxLength": 32 },
+        "pregnancy_or_medication": { "type": "string", "maxLength": 32 },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Multi-turn chat interaction",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "user_id": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["user", "assistant"] },
+        "content": { "type": "string", "maxLength": 10000 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["user_id", "role", "content"]
+    },
+    "Click": {
+      "title": "Click",
+      "description": "Affiliate product recommendation click",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "user_id": { "type": "string", "maxLength": 128 },
+        "product_id": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["product_id"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Authenticated user records"
+    },
+    "/profiles/{userId}": {
+      "schema": "Profile",
+      "description": "Personalized skincare skin profile per user"
+    },
+    "/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Chat messages with Gemini skincare assistant"
+    },
+    "/clicks/{clickId}": {
+      "schema": "Click",
+      "description": "Product recommendation clicks"
+    }
+  }
+}

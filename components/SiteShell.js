@@ -3,7 +3,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { getSupabaseBrowser } from "@/lib/supabase/client";
+import { auth, signOutUser, testConnection } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import Atmosphere from "@/components/fx/Atmosphere";
 import CursorGlow from "@/components/fx/CursorGlow";
 
@@ -14,18 +15,17 @@ export default function SiteShell({ children, flush = false }) {
   const reduce = useReducedMotion();
 
   useEffect(() => {
-    const supabase = getSupabaseBrowser();
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_, session) => setUser(session?.user || null));
-    return () => subscription.unsubscribe();
+    testConnection();
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser || null);
+    });
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => setOpen(false), [pathname]);
 
-  async function signOut() {
-    await getSupabaseBrowser().auth.signOut();
+  async function handleSignOut() {
+    await signOutUser();
     location.href = "/";
   }
 
@@ -34,14 +34,29 @@ export default function SiteShell({ children, flush = false }) {
       <Link href="/chat">Atelier</Link>
       <Link href="/products">Catalogue</Link>
       <Link href="/profile">Profile</Link>
-      <button className="btn ghost" onClick={signOut}>
+      <div className="user-nav-chip" title={user.email || ""}>
+        {user.photoURL ? (
+          <img src={user.photoURL} alt="Avatar" className="user-avatar-mini" />
+        ) : (
+          <span className="user-initial">
+            {(user.displayName || user.email || "U")[0].toUpperCase()}
+          </span>
+        )}
+        <span className="user-name-snippet">
+          {user.displayName?.split(" ")[0] || "Account"}
+        </span>
+      </div>
+      <button className="btn ghost" onClick={handleSignOut} style={{ padding: "8px 16px" }}>
         Sign out
       </button>
     </>
   ) : (
     <>
       <Link href="/#ritual">The ritual</Link>
-      <Link href="/login">Sign in</Link>
+      <Link href="/products">Catalogue</Link>
+      <Link href="/login" className="btn" style={{ padding: "8px 20px" }}>
+        Sign in
+      </Link>
     </>
   );
 
@@ -59,7 +74,12 @@ export default function SiteShell({ children, flush = false }) {
         <nav className="nav" aria-label="Primary">
           {links}
         </nav>
-        <button className="menu-toggle" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+        <button
+          className="menu-toggle"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
           <span />
         </button>
       </header>
