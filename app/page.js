@@ -7,9 +7,10 @@ import { getSupabaseBrowser } from "@/lib/supabase/client";
 export default function Home() {
   const [signedIn, setSignedIn] = useState(false);
   useEffect(() => {
-    getSupabaseBrowser()
-      .auth.getUser()
-      .then(({ data }) => setSignedIn(!!data.user));
+    const supabase = getSupabaseBrowser();
+    if (!supabase) return;
+
+    supabase.auth.getUser().then(({ data }) => setSignedIn(!!data.user));
   }, []);
   return (
     <SiteShell flush>
