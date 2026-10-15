@@ -1,12 +1,5 @@
-import SiteShell from "@/components/SiteShell";
-import ProductsView from "@/components/products/ProductsView";
+import { redirect } from "next/navigation";
 
 export default function Products() {
-  return (
-    <SiteShell>
-      <main className="page">
-        <ProductsView />
-      </main>
-    </SiteShell>
-  );
+  redirect("/catalogue");
 }

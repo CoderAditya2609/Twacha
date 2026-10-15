@@ -54,7 +54,7 @@ export default function LandingView({ signedIn = false }) {
             ))}
           </h1>
           <motion.p initial={reduce ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.7 }}>
-            Twacha’s skincare assistant uses your routine, skin needs, lifestyle and budget to help you make calmer, more informed choices.
+            Claire, Twacha&rsquo;s skincare assistant, uses your routine, skin needs, lifestyle and budget to help you make calmer, more informed choices.
           </motion.p>
           <motion.div initial={reduce ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75, duration: 0.6 }}>
             <Link className="btn" href={signedIn ? "/chat" : "/login"}>

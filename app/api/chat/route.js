@@ -6,18 +6,26 @@ import products from "@/data/products.json";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+let aiClient = null;
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY || process.env.AI_API_KEY,
-  httpOptions: {
-    headers: {
-      "User-Agent": "aistudio-build",
+function getAiClient() {
+  if (aiClient) return aiClient;
+  const apiKey = process.env.GEMINI_API_KEY || process.env.AI_API_KEY;
+  if (!apiKey) return null;
+  aiClient = new GoogleGenAI({
+    apiKey,
+    httpOptions: {
+      headers: {
+        "User-Agent": "aistudio-build",
+      },
     },
-  },
-});
+  });
+  return aiClient;
+}
 
 function createSystemInstruction(profile) {
-  return `You are Twacha's luxury skincare dermatological assistant.
+  return `You are Claire, Twacha's skincare assistant — a luxury dermatological skincare advisor.
+Always introduce yourself as "Claire, Twacha's skincare assistant" when appropriate.
 Never mention model names, underlying AI providers, or internal technical architecture.
 Act as a mindful, highly knowledgeable, luxury aesthetic skincare advisor (in the tradition of Aesop, Augustinus Bader, and Chanel Beauty).
 Do not diagnose medical illnesses or claim cures. Clearly state uncertainty and conclude health advice with: "Not medical advice — consult a dermatologist for severe or persistent problems."
@@ -70,23 +78,28 @@ export async function POST(request) {
 
     // Attempt Gemini with a fast 3.5s timeout. If unavailable (503 / 429), fall back to Expert Skincare NLM Engine.
     let geminiStream = null;
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500);
+    const client = getAiClient();
+    if (client) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3500);
 
-      geminiStream = await ai.models.generateContentStream({
-        model,
-        contents: formattedContents,
-        config: {
-          systemInstruction: createSystemInstruction(profile),
-          temperature: 0.4,
-          maxOutputTokens: 1200,
-        },
-      });
-      clearTimeout(timeoutId);
-    } catch (apiErr) {
-      console.warn("Gemini service unavailable, switching to Skincare NLM Engine:", apiErr.message);
-      geminiStream = null;
+        geminiStream = await client.models.generateContentStream({
+          model,
+          contents: formattedContents,
+          config: {
+            systemInstruction: createSystemInstruction(profile),
+            temperature: 0.4,
+            maxOutputTokens: 1200,
+          },
+        });
+        clearTimeout(timeoutId);
+      } catch (apiErr) {
+        console.warn("Assistant service unavailable, switching to local skincare knowledge engine:", apiErr.message);
+        geminiStream = null;
+      }
+    } else {
+      console.warn("No assistant API key configured, using local skincare knowledge engine.");
     }
 
     // If Gemini stream is active, pipe it
@@ -101,7 +114,7 @@ export async function POST(request) {
             }
             controller.close();
           } catch (err) {
-            console.warn("Gemini stream error, falling back to rule engine:", err.message);
+            console.warn("Assistant stream interrupted, switching to local skincare knowledge engine:", err.message);
             // Fallback gracefully mid-stream if needed
             const fallbackText = generateSkincareResponse({
               userMessage: message,

@@ -1,43 +1,15 @@
 "use client";
 import { useState } from "react";
 
-const specificProductImages = {
-  "simple-face-wash": "/images/products/simple-face-wash.jpg",
-  "lrp-effaclar-gel": "/images/products/lrp-effaclar-gel.jpg",
-  "ponds-super-light-gel": "/images/products/ponds-super-light-gel.jpg",
-  "cerave-moisturising-cream": "/images/products/cerave-moisturising-cream.jpg",
-  "aqualogica-glow-sunscreen": "/images/products/aqualogica-glow-sunscreen.jpg",
-  "lrp-anthelios-uvmue": "/images/products/lrp-anthelios-uvmue.jpg",
-};
-
-const categoryImages = {
-  cleanser: "/images/products/cleanser.jpg",
-  moisturizer: "/images/products/cream.jpg",
-  cream: "/images/products/cream.jpg",
-  sunscreen: "/images/products/sunscreen.jpg",
-  serum: "/images/products/serum.jpg",
-  acne: "/images/products/serum.jpg",
-  eye: "/images/products/cream.jpg",
-  lip: "/images/products/cream.jpg",
-  body: "/images/products/cleanser.jpg",
-};
-
-export default function ProductVisual({ id = "", brand = "T", category = "", name = "" }) {
+export default function ProductVisual({ id = "", brand = "T", category = "", name = "", imageUrl = "" }) {
   const [imgError, setImgError] = useState(false);
 
-  // Exact product image lookup by ID, then category fallback
-  const directSrc = id ? specificProductImages[id] : null;
-  const catKey = Object.keys(categoryImages).find((k) =>
-    (category || "").toLowerCase().includes(k)
-  );
-  const imgSrc = directSrc || (catKey ? categoryImages[catKey] : "/images/products/serum.jpg");
-
-  if (!imgError && imgSrc) {
+  if (imageUrl && !imgError) {
     return (
       <div className="product-visual-wrapper">
         <img
-          src={imgSrc}
-          alt={`${brand} ${name || category}`}
+          src={imageUrl}
+          alt={name || `${brand} ${category}`}
           className="product-photo"
           referrerPolicy="no-referrer"
           onError={() => setImgError(true)}

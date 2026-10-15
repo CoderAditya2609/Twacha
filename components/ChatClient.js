@@ -1,6 +1,6 @@
 "use client";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { auth, db } from "@/lib/firebase";
@@ -25,6 +25,25 @@ const starters = [
   "Recommend a gentle daily routine suited for my budget.",
   "Which active ingredient works best for dark spots?",
 ];
+
+function ClaireAvatar() {
+  return (
+    <span className="claire-avatar" aria-hidden>
+      <svg viewBox="0 0 40 40" width="40" height="40">
+        <defs>
+          <linearGradient id="claire-avatar-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#D4A5A8" />
+            <stop offset="100%" stopColor="#6B3A3A" />
+          </linearGradient>
+        </defs>
+        <circle cx="20" cy="20" r="20" fill="url(#claire-avatar-grad)" />
+        <text x="20" y="27" textAnchor="middle" fontFamily="Georgia, serif" fontSize="20" fontWeight="600" fill="#F3E9E6">
+          C
+        </text>
+      </svg>
+    </span>
+  );
+}
 
 function formatConfidence(conf) {
   if (typeof conf !== "number") return "Medium";
@@ -183,6 +202,7 @@ function Markdown({ children }) {
 }
 
 export default function ChatClient() {
+  const searchParams = useSearchParams();
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -191,7 +211,6 @@ export default function ChatClient() {
   const [loading, setLoading] = useState(true);
   const [streaming, setStreaming] = useState(false);
   const [error, setError] = useState("");
-  const [sidebar, setSidebar] = useState(true);
   const [modelChoice, setModelChoice] = useState("general");
 
   // Photo analysis states
@@ -211,6 +230,10 @@ export default function ChatClient() {
       setUser(currentUser);
 
       try {
+        // Prefill the composer when arriving from "Ask Claire about this"
+        const ask = searchParams.get("ask");
+        if (ask) setInput(ask);
+
         // Load user skincare profile
         const profSnap = await getDoc(doc(db, "profiles", currentUser.uid));
         if (!profSnap.exists()) {
@@ -218,6 +241,12 @@ export default function ChatClient() {
           return;
         }
         setProfile(profSnap.data());
+
+        // "New chat" starts empty instead of restoring history
+        if (searchParams.get("new") === "1") {
+          setLoading(false);
+          return;
+        }
 
         // Load chat history from Firestore
         const q = query(
@@ -241,6 +270,12 @@ export default function ChatClient() {
     });
 
     return () => unsub();
+  }, [searchParams]);
+
+  useEffect(() => {
+    const onNewChat = () => startNewChat();
+    window.addEventListener("twacha:new-chat", onNewChat);
+    return () => window.removeEventListener("twacha:new-chat", onNewChat);
   }, []);
 
   useEffect(() => {
@@ -291,6 +326,18 @@ export default function ChatClient() {
 
     setMessages((m) => [...m, optimisticUser, optimisticAssistant]);
     setHistory((h) => [...h, optimisticUser]);
+
+    // Persist a text-only placeholder so the photo turn survives a reload (image is never stored)
+    try {
+      await addDoc(collection(db, "messages"), {
+        user_id: user.uid,
+        role: "user",
+        content: optimisticUser.content,
+        createdAt: optimisticUser.createdAt,
+      });
+    } catch (dbErr) {
+      console.warn("Firestore photo message write notice:", dbErr);
+    }
 
     try {
       const token = await getAccessToken();
@@ -551,90 +598,50 @@ export default function ChatClient() {
   if (loading) {
     return (
       <section className="card center" style={{ margin: "40px auto", maxWidth: 480 }}>
-        <div className="eyebrow">Preparing Atelier</div>
+        <div className="eyebrow">Claire</div>
         <h2>Loading your consultation…</h2>
         <p className="muted">Retrieving your skin diagnostics and personalized notes.</p>
       </section>
     );
   }
 
-  const past = history.filter((m) => m.role === "user").slice(-12).reverse();
-
   return (
-    <div className={`chat-layout ${sidebar ? "" : "collapsed"}`}>
-      <aside className={`sidebar ${sidebar ? "" : "collapsed"}`}>
-        <button
-          className="btn ghost sidebar-toggle"
-          onClick={() => setSidebar((v) => !v)}
-          aria-label="Toggle history"
-        >
-          {sidebar ? "Hide Consultation History" : "Consultation History"}
-        </button>
-
-        <Button onClick={startNewChat} style={{ width: "100%", marginBottom: 16 }}>
-          + New Consultation
-        </Button>
-
-        {/* Advisor Intelligence Selector */}
-        <div className="model-selector-box">
-          <label className="eyebrow" htmlFor="model-select">
-            Advisor Intelligence
-          </label>
-          <select
-            id="model-select"
-            className="model-select"
-            value={modelChoice}
-            onChange={(e) => setModelChoice(e.target.value)}
-          >
-            <option value="general">Balanced (Flash Intelligence)</option>
-            <option value="pro">Deep Clinical (Pro Intelligence)</option>
-            <option value="fast">Rapid Advice (Flash Lite)</option>
-          </select>
-        </div>
-
-        <div className="eyebrow" style={{ marginTop: 14 }}>
-          Past Topics
-        </div>
-        <div className="history-list" aria-label="Chat history">
-          {past.length === 0 ? (
-            <p className="muted" style={{ fontSize: "0.78rem", padding: "6px 8px" }}>
-              No previous consultations yet.
-            </p>
-          ) : (
-            past.map((m) => (
-              <button
-                key={m.id}
-                className="history-item"
-                onClick={() => setMessages(history)}
-                title={m.content}
-              >
-                {m.content.slice(0, 42)}…
-              </button>
-            ))
-          )}
-        </div>
-
-        <nav style={{ marginTop: 24 }}>
-          <Link className="linkish" href="/products">
-            Curated Catalogue
-          </Link>
-          <br />
-          <Link className="linkish" href="/profile">
-            Edit Skin Profile
-          </Link>
-        </nav>
-      </aside>
-
+    <div className="chat-layout">
       <section className="conversation" style={{ position: "relative" }}>
         <div className="chat-orb" aria-hidden />
+
+        <header className="chat-head">
+          <div className="chat-head-id">
+            <ClaireAvatar />
+            <div>
+              <h2 className="chat-head-name">Claire</h2>
+              <p className="muted chat-head-role">Twacha&rsquo;s skincare assistant</p>
+            </div>
+          </div>
+          <div className="chat-head-actions">
+            <label className="chat-model-label" htmlFor="model-select">
+              Advice depth
+            </label>
+            <select
+              id="model-select"
+              className="model-select"
+              value={modelChoice}
+              onChange={(e) => setModelChoice(e.target.value)}
+            >
+              <option value="general">Balanced</option>
+              <option value="pro">Deep Clinical</option>
+              <option value="fast">Rapid Advice</option>
+            </select>
+          </div>
+        </header>
 
         <div className="messages" tabIndex={0} aria-label="Conversation messages">
           {messages.length === 0 && (
             <div className="center chat-intro">
               <div className="eyebrow">Personal Skincare Guidance</div>
-              <h2>Welcome to the Twacha Atelier</h2>
+              <h2>Chat with Claire</h2>
               <p className="muted" style={{ maxWidth: 540, margin: "0 auto" }}>
-                Ask about current skin concerns, formulation pairings, or upload a skin photo for
+                Ask Claire about current skin concerns, formulation pairings, or upload a skin photo for
                 instant clinical vision observation and bespoke routine recommendations.
               </p>
             </div>
@@ -642,37 +649,57 @@ export default function ChatClient() {
 
           {messages.map((m) => (
             <motion.div
-              className={`bubble ${m.role}`}
+              className={`bubble-row ${m.role}`}
               key={m.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25 }}
             >
-              {m.analysis && (
-                <AnalysisCard analysis={m.analysis} safetyMode={m.safetyMode} />
-              )}
-              {m.role === "assistant" ? <Markdown>{m.content}</Markdown> : m.content}
+              {m.role === "assistant" && <ClaireAvatar />}
+              <div className={`bubble ${m.role}`}>
+                {m.analysis && (
+                  <AnalysisCard analysis={m.analysis} safetyMode={m.safetyMode} />
+                )}
+                {m.role === "assistant" ? (
+                  <>
+                    <span className="bubble-label">Claire</span>
+                    <Markdown>{m.content}</Markdown>
+                  </>
+                ) : (
+                  m.content
+                )}
+              </div>
             </motion.div>
           ))}
 
           {analyzingPhoto && (
-            <div className="bubble assistant" style={{ background: "var(--blush-soft)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span className="analysis-badge" style={{ animation: "pulse 1.5s infinite" }}>
-                  ✦ AI Vision Active
-                </span>
-                <span style={{ fontSize: "0.9rem", color: "var(--maroon)" }}>
-                  Observing skin photo with clinical AI…
-                </span>
+            <div className="bubble-row assistant">
+              <ClaireAvatar />
+              <div className="bubble assistant" style={{ background: "var(--blush-soft)" }}>
+                <span className="bubble-label">Claire</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span className="analysis-badge" style={{ animation: "pulse 1.5s infinite" }}>
+                    ✦ AI Vision Active
+                  </span>
+                  <span style={{ fontSize: "0.9rem", color: "var(--maroon)" }}>
+                    Observing skin photo with clinical AI…
+                  </span>
+                </div>
               </div>
             </div>
           )}
 
           {streaming && !analyzingPhoto && (
-            <div className="typing" aria-label="Assistant is writing">
-              <i />
-              <i />
-              <i />
+            <div className="bubble-row assistant">
+              <ClaireAvatar />
+              <div className="claire-typing" aria-label="Claire is typing">
+                <span className="typing-label">Claire is typing</span>
+                <span className="typing">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+              </div>
             </div>
           )}
           <div ref={end} />

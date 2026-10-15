@@ -1,25 +1,15 @@
 import { requireUser } from "@/lib/supabase/server";
-import { analyzeImage, streamChat } from "@/lib/ai/provider";
+import { analyzeImage, streamChat, getVisionConfigError } from "@/lib/ai/provider";
+import { hasExceededDailyPhotoLimit } from "@/lib/usage";
 import products from "@/data/products.json";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+// Highest duration allowed on Vercel's free (Hobby) plan: 300s
+export const maxDuration = 300;
 
-// In-memory rate limiting tracker (per user per day)
-const userDailyAnalyses = new Map();
+const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
 
-function checkAndIncrementRateLimit(userId) {
-  const today = new Date().toISOString().slice(0, 10);
-  const key = `${userId}:${today}`;
-  const current = userDailyAnalyses.get(key) || 0;
-  if (current >= 10) {
-    return false;
-  }
-  userDailyAnalyses.set(key, current + 1);
-  return true;
-}
-
-const VISION_SYSTEM_PROMPT = `You are a careful clinical skin-observation assistant for Twacha Atelier.
+const VISION_SYSTEM_PROMPT = `You are a careful clinical skin-observation assistant supporting Claire, Twacha's skincare assistant.
 Your task is to visually observe a skin/face photo and return ONLY valid, raw JSON (no markdown formatting, no code fences, no introductory or trailing text).
 
 Required JSON shape:
@@ -91,7 +81,7 @@ function parseAnalysisJson(rawText) {
 }
 
 function createRecommendationPrompt({ analysis, profile, safetyMode }) {
-  return `You are Twacha's luxury skincare dermatological assistant.
+  return `You are Claire, Twacha's skincare assistant — a luxury dermatological skincare advisor.
 A user has submitted a facial photo which was observed with clinical vision.
 
 VISUAL OBSERVATION RESULTS:
@@ -163,7 +153,7 @@ export async function POST(request) {
       }
       mimeType = file.type;
       const buffer = Buffer.from(await file.arrayBuffer());
-      if (buffer.length > 3.2 * 1024 * 1024) {
+      if (buffer.length > MAX_IMAGE_BYTES) {
         return Response.json(
           { error: "The image exceeds the 3 MB limit. Please select a smaller photo." },
           { status: 400 }
@@ -205,7 +195,7 @@ export async function POST(request) {
 
       // Estimate byte size from base64
       const estimatedBytes = (imageBase64.length * 3) / 4;
-      if (estimatedBytes > 3.2 * 1024 * 1024) {
+      if (estimatedBytes > MAX_IMAGE_BYTES) {
         return Response.json(
           { error: "The image exceeds the 3 MB limit. Please select a smaller photo." },
           { status: 400 }
@@ -222,9 +212,10 @@ export async function POST(request) {
       );
     }
 
-    // 3. Rate limiting check (max 10 analyses per user per day)
-    const allowed = checkAndIncrementRateLimit(user.id);
-    if (!allowed) {
+    // 3. Rate limiting check (max 10 analyses per user per day, counted from the messages table)
+    const authToken = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") || "";
+    const limitReached = await hasExceededDailyPhotoLimit({ userId: user.id, token: authToken });
+    if (limitReached) {
       return Response.json(
         { error: "Daily limit reached. You can perform up to 10 skin photo analyses per day." },
         { status: 429 }
@@ -232,20 +223,29 @@ export async function POST(request) {
     }
 
     // 4. Step 1: Vision analysis (structured JSON)
+    const visionConfigError = getVisionConfigError();
+    if (visionConfigError) {
+      console.error("Skin analysis configuration error:", visionConfigError);
+      return Response.json(
+        { error: "Photo analysis is not available at the moment. Please try again later." },
+        { status: 503 }
+      );
+    }
+
     let parsedAnalysis = null;
-    let rawResult = "";
 
     try {
-      rawResult = await analyzeImage({
+      let rawResult = await analyzeImage({
         systemPrompt: VISION_SYSTEM_PROMPT,
         userText: "Please carefully inspect this skin photo and output strictly the required JSON.",
         imageBase64,
         mimeType,
       });
-      parsedAnalysis = parseAnalysisJson(rawResult);
-    } catch (parseErr) {
-      // Retry once if parsing fails
+
       try {
+        parsedAnalysis = parseAnalysisJson(rawResult);
+      } catch (parseErr) {
+        // Retry once if the model output was not valid JSON
         rawResult = await analyzeImage({
           systemPrompt:
             VISION_SYSTEM_PROMPT +
@@ -255,15 +255,22 @@ export async function POST(request) {
           mimeType,
         });
         parsedAnalysis = parseAnalysisJson(rawResult);
-      } catch (retryErr) {
+      }
+    } catch (analysisErr) {
+      console.error("Vision observation failed:", analysisErr?.message || "unknown error");
+      if (/VISION_PROVIDER_UNAVAILABLE/i.test(analysisErr?.message || "")) {
         return Response.json(
-          {
-            error:
-              "We could not clearly parse the skin observation from this photo. Please try again with a clearer, well-lit image.",
-          },
-          { status: 422 }
+          { error: "The analysis service is busy right now. Please try again in a moment." },
+          { status: 503 }
         );
       }
+      return Response.json(
+        {
+          error:
+            "We could not observe this photo clearly. Please try again with a clearer, well-lit image.",
+        },
+        { status: 422 }
+      );
     }
 
     // Ensure photo is usable
@@ -376,15 +383,24 @@ export async function POST(request) {
       },
     });
   } catch (error) {
-    console.error("Skin analysis error:", error.message);
-    const msg = error.message || "An unexpected error occurred.";
-    if (msg.includes("does not support image analysis")) {
-      return Response.json({ error: msg }, { status: 400 });
-    }
-    if (msg.includes("API key")) {
+    console.error("Skin analysis error:", error?.message || "unknown error");
+    const msg = error?.message || "";
+    if (/not been configured/i.test(msg)) {
       return Response.json(
-        { error: "The photo analysis service is currently unavailable. Please check the AI configuration." },
+        { error: "Photo analysis is not available at the moment. Please try again later." },
         { status: 503 }
+      );
+    }
+    if (/does not support image analysis/i.test(msg)) {
+      return Response.json(
+        { error: "Photo analysis is not available at the moment. Please try again later." },
+        { status: 400 }
+      );
+    }
+    if (/quota|rate ?limit|too many requests|429|503|overloaded|high demand/i.test(msg)) {
+      return Response.json(
+        { error: "The analysis service is busy right now. Please try again in a moment." },
+        { status: 429 }
       );
     }
     return Response.json(

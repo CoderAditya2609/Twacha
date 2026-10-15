@@ -5,10 +5,22 @@
     "brand": "Simple",
     "category": "Cleanser",
     "price_inr": 225,
-    "key_ingredients": ["Pro-vitamin B5", "Vitamin E", "Glycerin"],
-    "suitable_skin_types": ["normal", "combination", "sensitive"],
-    "avoid_if": ["broken skin", "known sensitivity to any listed ingredient"],
-    "affiliate_url": "https://example.com/aff/simple-face-wash"
+    "key_ingredients": [
+      "Pro-vitamin B5",
+      "Vitamin E",
+      "Glycerin"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "combination",
+      "sensitive"
+    ],
+    "avoid_if": [
+      "broken skin",
+      "known sensitivity to any listed ingredient"
+    ],
+    "affiliate_url": "https://example.com/aff/simple-face-wash",
+    "image_url": "/images/products/simple-face-wash.jpg"
   },
   {
     "id": "lrp-effaclar-gel",
@@ -16,10 +28,20 @@
     "brand": "La Roche-Posay",
     "category": "Cleanser",
     "price_inr": 1250,
-    "key_ingredients": ["Zinc pidolate", "Thermal spring water"],
-    "suitable_skin_types": ["oily", "combination"],
-    "avoid_if": ["very dry or eczema-prone skin", "over-cleansing with actives"],
-    "affiliate_url": "https://example.com/aff/lrp-effaclar-gel"
+    "key_ingredients": [
+      "Zinc pidolate",
+      "Thermal spring water"
+    ],
+    "suitable_skin_types": [
+      "oily",
+      "combination"
+    ],
+    "avoid_if": [
+      "very dry or eczema-prone skin",
+      "over-cleansing with actives"
+    ],
+    "affiliate_url": "https://example.com/aff/lrp-effaclar-gel",
+    "image_url": "/images/products/lrp-effaclar-gel.jpg"
   },
   {
     "id": "ponds-super-light-gel",
@@ -27,10 +49,21 @@
     "brand": "Pond's",
     "category": "Moisturizer",
     "price_inr": 349,
-    "key_ingredients": ["Hyaluronic acid", "Vitamin E"],
-    "suitable_skin_types": ["oily", "combination", "normal"],
-    "avoid_if": ["fragrance sensitivity", "very dry skin needing a richer cream"],
-    "affiliate_url": "https://example.com/aff/ponds-super-light-gel"
+    "key_ingredients": [
+      "Hyaluronic acid",
+      "Vitamin E"
+    ],
+    "suitable_skin_types": [
+      "oily",
+      "combination",
+      "normal"
+    ],
+    "avoid_if": [
+      "fragrance sensitivity",
+      "very dry skin needing a richer cream"
+    ],
+    "affiliate_url": "https://example.com/aff/ponds-super-light-gel",
+    "image_url": "/images/products/ponds-super-light-gel.jpg"
   },
   {
     "id": "cerave-moisturising-cream",
@@ -38,10 +71,21 @@
     "brand": "CeraVe",
     "category": "Moisturizer",
     "price_inr": 1499,
-    "key_ingredients": ["Ceramides", "Hyaluronic acid", "MVE technology"],
-    "suitable_skin_types": ["dry", "normal", "sensitive"],
-    "avoid_if": ["known ceramide or ingredient sensitivity"],
-    "affiliate_url": "https://example.com/aff/cerave-moisturising-cream"
+    "key_ingredients": [
+      "Ceramides",
+      "Hyaluronic acid",
+      "MVE technology"
+    ],
+    "suitable_skin_types": [
+      "dry",
+      "normal",
+      "sensitive"
+    ],
+    "avoid_if": [
+      "known ceramide or ingredient sensitivity"
+    ],
+    "affiliate_url": "https://example.com/aff/cerave-moisturising-cream",
+    "image_url": "/images/products/cerave-moisturising-cream.jpg"
   },
   {
     "id": "aqualogica-glow-sunscreen",
@@ -49,10 +93,22 @@
     "brand": "Aqualogica",
     "category": "Sunscreen",
     "price_inr": 399,
-    "key_ingredients": ["Vitamin C", "Papaya", "Broad-spectrum UV filters"],
-    "suitable_skin_types": ["normal", "dry", "combination"],
-    "avoid_if": ["fragrance sensitivity", "known filter allergies"],
-    "affiliate_url": "https://example.com/aff/aqualogica-glow-sunscreen"
+    "key_ingredients": [
+      "Vitamin C",
+      "Papaya",
+      "Broad-spectrum UV filters"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "combination"
+    ],
+    "avoid_if": [
+      "fragrance sensitivity",
+      "known filter allergies"
+    ],
+    "affiliate_url": "https://example.com/aff/aqualogica-glow-sunscreen",
+    "image_url": "/images/products/aqualogica-glow-sunscreen.jpg"
   },
   {
     "id": "lrp-anthelios-uvmue",
@@ -60,10 +116,21 @@
     "brand": "La Roche-Posay",
     "category": "Sunscreen",
     "price_inr": 2150,
-    "key_ingredients": ["Mexoryl 400", "Thermal spring water", "Broad-spectrum UV filters"],
-    "suitable_skin_types": ["normal", "combination", "sensitive"],
-    "avoid_if": ["known allergy to chemical UV filters"],
-    "affiliate_url": "https://example.com/aff/lrp-anthelios-uvmue"
+    "key_ingredients": [
+      "Mexoryl 400",
+      "Thermal spring water",
+      "Broad-spectrum UV filters"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "combination",
+      "sensitive"
+    ],
+    "avoid_if": [
+      "known allergy to chemical UV filters"
+    ],
+    "affiliate_url": "https://example.com/aff/lrp-anthelios-uvmue",
+    "image_url": "/images/products/lrp-anthelios-uvmue.jpg"
   },
   {
     "id": "minimalist-vitamin-c",
@@ -71,10 +138,23 @@
     "brand": "Minimalist",
     "category": "Serum",
     "price_inr": 599,
-    "key_ingredients": ["Ethyl ascorbic acid 10%", "Acetyl glucosamine", "Ferulic acid"],
-    "suitable_skin_types": ["normal", "combination", "oily"],
-    "avoid_if": ["compromised skin barrier", "very sensitive skin", "unprotected sun exposure"],
-    "affiliate_url": "https://example.com/aff/minimalist-vitamin-c"
+    "key_ingredients": [
+      "Ethyl ascorbic acid 10%",
+      "Acetyl glucosamine",
+      "Ferulic acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "combination",
+      "oily"
+    ],
+    "avoid_if": [
+      "compromised skin barrier",
+      "very sensitive skin",
+      "unprotected sun exposure"
+    ],
+    "affiliate_url": "https://example.com/aff/minimalist-vitamin-c",
+    "image_url": "https://beminimalist.co/cdn/shop/products/VitaminC10_1200-1-min.png?v=1646543848"
   },
   {
     "id": "derma-co-vitamin-c",
@@ -82,10 +162,21 @@
     "brand": "The Derma Co",
     "category": "Serum",
     "price_inr": 649,
-    "key_ingredients": ["Ethyl ascorbic acid 10%", "Sodium ascorbyl phosphate 10%", "Ferulic acid"],
-    "suitable_skin_types": ["normal", "combination"],
-    "avoid_if": ["very sensitive or reactive skin", "open wounds"],
-    "affiliate_url": "https://example.com/aff/derma-co-vitamin-c"
+    "key_ingredients": [
+      "Ethyl ascorbic acid 10%",
+      "Sodium ascorbyl phosphate 10%",
+      "Ferulic acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "combination"
+    ],
+    "avoid_if": [
+      "very sensitive or reactive skin",
+      "open wounds"
+    ],
+    "affiliate_url": "https://example.com/aff/derma-co-vitamin-c",
+    "image_url": "https://thedermaco.com/cdn/shop/files/2_PDP_40697919-f482-465b-8f1d-cb9f649ad4df.jpg?v=1789722392"
   },
   {
     "id": "plum-vitamin-c",
@@ -93,10 +184,21 @@
     "brand": "Plum",
     "category": "Serum",
     "price_inr": 675,
-    "key_ingredients": ["Ethyl ascorbic acid 15%", "Mandarin extract"],
-    "suitable_skin_types": ["normal", "combination", "dull skin"],
-    "avoid_if": ["fragrance sensitivity", "very sensitive skin"],
-    "affiliate_url": "https://example.com/aff/plum-vitamin-c"
+    "key_ingredients": [
+      "Ethyl ascorbic acid 15%",
+      "Mandarin extract"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "combination",
+      "dull skin"
+    ],
+    "avoid_if": [
+      "fragrance sensitivity",
+      "very sensitive skin"
+    ],
+    "affiliate_url": "https://example.com/aff/plum-vitamin-c",
+    "image_url": "https://plumgoodness.com/cdn/shop/files/Listing_1st_Tile_Vit_C_15_Serum_30ml_1001x1001_px.webp?v=1776943410&width=1024"
   },
   {
     "id": "minimalist-niacinamide",
@@ -104,10 +206,21 @@
     "brand": "Minimalist",
     "category": "Serum",
     "price_inr": 469,
-    "key_ingredients": ["Niacinamide 5%", "Hyaluronic acid"],
-    "suitable_skin_types": ["oily", "combination", "normal"],
-    "avoid_if": ["irritated or peeling skin", "pure high-strength niacinamide flush"],
-    "affiliate_url": "https://example.com/aff/minimalist-niacinamide"
+    "key_ingredients": [
+      "Niacinamide 5%",
+      "Hyaluronic acid"
+    ],
+    "suitable_skin_types": [
+      "oily",
+      "combination",
+      "normal"
+    ],
+    "avoid_if": [
+      "irritated or peeling skin",
+      "pure high-strength niacinamide flush"
+    ],
+    "affiliate_url": "https://example.com/aff/minimalist-niacinamide",
+    "image_url": "https://beminimalist.co/cdn/shop/products/Niacinamide5_1200-1-min.png?v=1646458955"
   },
   {
     "id": "dotkey-niacinamide",
@@ -115,10 +228,22 @@
     "brand": "Dot & Key",
     "category": "Serum",
     "price_inr": 695,
-    "key_ingredients": ["Niacinamide 10%", "Zinc", "Ceramides"],
-    "suitable_skin_types": ["oily", "combination", "normal"],
-    "avoid_if": ["broken barrier", "start-low if niacinamide-sensitive"],
-    "affiliate_url": "https://example.com/aff/dotkey-niacinamide"
+    "key_ingredients": [
+      "Niacinamide 10%",
+      "Zinc",
+      "Ceramides"
+    ],
+    "suitable_skin_types": [
+      "oily",
+      "combination",
+      "normal"
+    ],
+    "avoid_if": [
+      "broken barrier",
+      "start-low if niacinamide-sensitive"
+    ],
+    "affiliate_url": "https://example.com/aff/dotkey-niacinamide",
+    "image_url": ""
   },
   {
     "id": "minimalist-salicylic-serum",
@@ -126,10 +251,21 @@
     "brand": "Minimalist",
     "category": "Serum",
     "price_inr": 549,
-    "key_ingredients": ["Salicylic acid 2%", "Hydroxy pinacolone retinoate-free formula"],
-    "suitable_skin_types": ["oily", "combination"],
-    "avoid_if": ["pregnancy unless a doctor agrees", "retinoid overuse", "very dry or peeling skin"],
-    "affiliate_url": "https://example.com/aff/minimalist-salicylic-serum"
+    "key_ingredients": [
+      "Salicylic acid 2%",
+      "Hydroxy pinacolone retinoate-free formula"
+    ],
+    "suitable_skin_types": [
+      "oily",
+      "combination"
+    ],
+    "avoid_if": [
+      "pregnancy unless a doctor agrees",
+      "retinoid overuse",
+      "very dry or peeling skin"
+    ],
+    "affiliate_url": "https://example.com/aff/minimalist-salicylic-serum",
+    "image_url": "https://beminimalist.co/cdn/shop/products/SalicylicAcid2_1200-1-min.png?v=1646458899"
   },
   {
     "id": "lrp-effaclar-serum",
@@ -137,10 +273,23 @@
     "brand": "La Roche-Posay",
     "category": "Serum",
     "price_inr": 2100,
-    "key_ingredients": ["Salicylic acid", "LHA", "Niacinamide", "Thermal spring water"],
-    "suitable_skin_types": ["oily", "combination"],
-    "avoid_if": ["pregnancy unless a doctor agrees", "retinoid stacking", "compromised barrier"],
-    "affiliate_url": "https://example.com/aff/lrp-effaclar-serum"
+    "key_ingredients": [
+      "Salicylic acid",
+      "LHA",
+      "Niacinamide",
+      "Thermal spring water"
+    ],
+    "suitable_skin_types": [
+      "oily",
+      "combination"
+    ],
+    "avoid_if": [
+      "pregnancy unless a doctor agrees",
+      "retinoid stacking",
+      "compromised barrier"
+    ],
+    "affiliate_url": "https://example.com/aff/lrp-effaclar-serum",
+    "image_url": "https://www.laroche-posay.sg/-/media/project/loreal/brand-sites/lrp/apac/sg/products/effaclar/effaclar-ultra-concentrated-serum/effaclar-concentrated-serum-for-acne-scars.png"
   },
   {
     "id": "minimalist-alpha-arbutin",
@@ -148,10 +297,21 @@
     "brand": "Minimalist",
     "category": "Serum",
     "price_inr": 539,
-    "key_ingredients": ["Alpha arbutin 2%", "Hyaluronic acid"],
-    "suitable_skin_types": ["normal", "combination", "oily"],
-    "avoid_if": ["unprotected sun exposure", "known hydroquinone-related sensitivity"],
-    "affiliate_url": "https://example.com/aff/minimalist-alpha-arbutin"
+    "key_ingredients": [
+      "Alpha arbutin 2%",
+      "Hyaluronic acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "combination",
+      "oily"
+    ],
+    "avoid_if": [
+      "unprotected sun exposure",
+      "known hydroquinone-related sensitivity"
+    ],
+    "affiliate_url": "https://example.com/aff/minimalist-alpha-arbutin",
+    "image_url": "https://beminimalist.co/cdn/shop/files/AlphaArNew.png?v=1721397838"
   },
   {
     "id": "derma-co-alpha-arbutin",
@@ -159,10 +319,22 @@
     "brand": "The Derma Co",
     "category": "Serum",
     "price_inr": 649,
-    "key_ingredients": ["Alpha arbutin 2%", "Kojic acid", "Niacinamide"],
-    "suitable_skin_types": ["normal", "combination"],
-    "avoid_if": ["very sensitive skin", "pregnancy unless a doctor agrees", "skip sunscreen days"],
-    "affiliate_url": "https://example.com/aff/derma-co-alpha-arbutin"
+    "key_ingredients": [
+      "Alpha arbutin 2%",
+      "Kojic acid",
+      "Niacinamide"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "combination"
+    ],
+    "avoid_if": [
+      "very sensitive skin",
+      "pregnancy unless a doctor agrees",
+      "skip sunscreen days"
+    ],
+    "affiliate_url": "https://example.com/aff/derma-co-alpha-arbutin",
+    "image_url": ""
   },
   {
     "id": "plum-hyaluronic",
@@ -170,10 +342,21 @@
     "brand": "Plum",
     "category": "Serum",
     "price_inr": 575,
-    "key_ingredients": ["Hyaluronic acid 2%", "Korean orchid"],
-    "suitable_skin_types": ["dry", "normal", "sensitive", "combination"],
-    "avoid_if": ["known orchid or fragrance sensitivity"],
-    "affiliate_url": "https://example.com/aff/plum-hyaluronic"
+    "key_ingredients": [
+      "Hyaluronic acid 2%",
+      "Korean orchid"
+    ],
+    "suitable_skin_types": [
+      "dry",
+      "normal",
+      "sensitive",
+      "combination"
+    ],
+    "avoid_if": [
+      "known orchid or fragrance sensitivity"
+    ],
+    "affiliate_url": "https://example.com/aff/plum-hyaluronic",
+    "image_url": ""
   },
   {
     "id": "cerave-ha-serum",
@@ -181,10 +364,21 @@
     "brand": "CeraVe",
     "category": "Serum",
     "price_inr": 1299,
-    "key_ingredients": ["Hyaluronic acid", "Ceramides", "Vitamin B5"],
-    "suitable_skin_types": ["dry", "normal", "sensitive"],
-    "avoid_if": ["known sensitivity to ceramides or listed ingredients"],
-    "affiliate_url": "https://example.com/aff/cerave-ha-serum"
+    "key_ingredients": [
+      "Hyaluronic acid",
+      "Ceramides",
+      "Vitamin B5"
+    ],
+    "suitable_skin_types": [
+      "dry",
+      "normal",
+      "sensitive"
+    ],
+    "avoid_if": [
+      "known sensitivity to ceramides or listed ingredients"
+    ],
+    "affiliate_url": "https://example.com/aff/cerave-ha-serum",
+    "image_url": "https://www.cerave.com/-/media/project/loreal/brand-sites/cerave/americas/us/products/hydrating-hyaluronic-acid-serum/700x700/hydrating-hyaluronic-acid-serum-front-700x700-v1.jpg?rev=7e9d7479b01940a39f84ffec62dca5ba"
   },
   {
     "id": "minimalist-retinol",
@@ -192,10 +386,23 @@
     "brand": "Minimalist",
     "category": "Serum",
     "price_inr": 699,
-    "key_ingredients": ["Retinol 0.3%", "Squalane", "Granactive retinoid support"],
-    "suitable_skin_types": ["normal", "combination"],
-    "avoid_if": ["pregnancy or breastfeeding", "AHA/BHA on the same night", "benzoyl peroxide in the same routine", "sun without SPF"],
-    "affiliate_url": "https://example.com/aff/minimalist-retinol"
+    "key_ingredients": [
+      "Retinol 0.3%",
+      "Squalane",
+      "Granactive retinoid support"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "combination"
+    ],
+    "avoid_if": [
+      "pregnancy or breastfeeding",
+      "AHA/BHA on the same night",
+      "benzoyl peroxide in the same routine",
+      "sun without SPF"
+    ],
+    "affiliate_url": "https://example.com/aff/minimalist-retinol",
+    "image_url": "https://beminimalist.co/cdn/shop/files/Reti3New.png?v=1721398129"
   },
   {
     "id": "lrp-retinol-b3",
@@ -203,10 +410,23 @@
     "brand": "La Roche-Posay",
     "category": "Serum",
     "price_inr": 2450,
-    "key_ingredients": ["Retinol", "Niacinamide", "Thermal spring water"],
-    "suitable_skin_types": ["normal", "combination", "dry"],
-    "avoid_if": ["pregnancy or breastfeeding", "AHA/BHA stacking", "active eczema or peeling"],
-    "affiliate_url": "https://example.com/aff/lrp-retinol-b3"
+    "key_ingredients": [
+      "Retinol",
+      "Niacinamide",
+      "Thermal spring water"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "combination",
+      "dry"
+    ],
+    "avoid_if": [
+      "pregnancy or breastfeeding",
+      "AHA/BHA stacking",
+      "active eczema or peeling"
+    ],
+    "affiliate_url": "https://example.com/aff/lrp-retinol-b3",
+    "image_url": "https://www.laroche-posay-me.com/-/media/project/loreal/brand-sites/lrp/apac/mena/products/retinol/b3-serum/larocheposay-product-antiaging-retinol-b3serum-30ml-3337878694469-fss-1.png"
   },
   {
     "id": "derma-co-acne-gel",
@@ -214,10 +434,21 @@
     "brand": "The Derma Co",
     "category": "Acne treatment",
     "price_inr": 449,
-    "key_ingredients": ["Salicylic acid 1%", "Witch hazel"],
-    "suitable_skin_types": ["oily", "combination"],
-    "avoid_if": ["pregnancy unless a doctor agrees", "retinoid overuse", "broken skin"],
-    "affiliate_url": "https://example.com/aff/derma-co-acne-gel"
+    "key_ingredients": [
+      "Salicylic acid 1%",
+      "Witch hazel"
+    ],
+    "suitable_skin_types": [
+      "oily",
+      "combination"
+    ],
+    "avoid_if": [
+      "pregnancy unless a doctor agrees",
+      "retinoid overuse",
+      "broken skin"
+    ],
+    "affiliate_url": "https://example.com/aff/derma-co-acne-gel",
+    "image_url": "https://thedermaco.com/cdn/shop/files/1st_1_1.jpg?v=1758286570"
   },
   {
     "id": "lrp-effaclar-duo",
@@ -225,10 +456,21 @@
     "brand": "La Roche-Posay",
     "category": "Acne treatment",
     "price_inr": 1650,
-    "key_ingredients": ["Niacinamide", "LHA", "Piroctone olamine"],
-    "suitable_skin_types": ["oily", "combination"],
-    "avoid_if": ["very dry skin", "known sensitivity to listed actives"],
-    "affiliate_url": "https://example.com/aff/lrp-effaclar-duo"
+    "key_ingredients": [
+      "Niacinamide",
+      "LHA",
+      "Piroctone olamine"
+    ],
+    "suitable_skin_types": [
+      "oily",
+      "combination"
+    ],
+    "avoid_if": [
+      "very dry skin",
+      "known sensitivity to listed actives"
+    ],
+    "affiliate_url": "https://example.com/aff/lrp-effaclar-duo",
+    "image_url": "https://www.laroche-posay.co.in/-/media/project/loreal/brand-sites/lrp/apac/in/products/effaclar/effaclar-duo-plus-m/lrp-effaclar-duo-m-front-pack.png"
   },
   {
     "id": "plum-green-tea-toner",
@@ -236,10 +478,21 @@
     "brand": "Plum",
     "category": "Toner",
     "price_inr": 390,
-    "key_ingredients": ["Green tea", "Willow bark", "Glycolic acid (low level)"],
-    "suitable_skin_types": ["oily", "combination"],
-    "avoid_if": ["very sensitive skin", "retinoid use the same night if stinging"],
-    "affiliate_url": "https://example.com/aff/plum-green-tea-toner"
+    "key_ingredients": [
+      "Green tea",
+      "Willow bark",
+      "Glycolic acid (low level)"
+    ],
+    "suitable_skin_types": [
+      "oily",
+      "combination"
+    ],
+    "avoid_if": [
+      "very sensitive skin",
+      "retinoid use the same night if stinging"
+    ],
+    "affiliate_url": "https://example.com/aff/plum-green-tea-toner",
+    "image_url": "https://plumgoodness.com/cdn/shop/files/Listing_1st_Tile_GT_Toner_200ml_1001x1001_px_c93eaf1e-d084-4779-bce8-6a976cadbed7.webp?v=1782212495&width=1024"
   },
   {
     "id": "lrp-soothing-toner",
@@ -247,10 +500,20 @@
     "brand": "La Roche-Posay",
     "category": "Toner",
     "price_inr": 1450,
-    "key_ingredients": ["Thermal spring water", "Glycerin"],
-    "suitable_skin_types": ["sensitive", "dry", "normal"],
-    "avoid_if": ["known sensitivity to any listed ingredient"],
-    "affiliate_url": "https://example.com/aff/lrp-soothing-toner"
+    "key_ingredients": [
+      "Thermal spring water",
+      "Glycerin"
+    ],
+    "suitable_skin_types": [
+      "sensitive",
+      "dry",
+      "normal"
+    ],
+    "avoid_if": [
+      "known sensitivity to any listed ingredient"
+    ],
+    "affiliate_url": "https://example.com/aff/lrp-soothing-toner",
+    "image_url": "https://www.laroche-posay.sg/-/media/project/loreal/brand-sites/lrp/apac/sg/products/physiological/soothing-lotion/la-roche-posay-productpage-face-cleanser-physiological-soothing-lotion-200ml-3337872410321-front.png"
   },
   {
     "id": "lakme-lip-love",
@@ -258,10 +521,20 @@
     "brand": "Lakmé",
     "category": "Lip care",
     "price_inr": 175,
-    "key_ingredients": ["Shea butter", "Vitamin E", "UV filters"],
-    "suitable_skin_types": ["dry", "normal"],
-    "avoid_if": ["fragrance or flavour sensitivity"],
-    "affiliate_url": "https://example.com/aff/lakme-lip-love"
+    "key_ingredients": [
+      "Shea butter",
+      "Vitamin E",
+      "UV filters"
+    ],
+    "suitable_skin_types": [
+      "dry",
+      "normal"
+    ],
+    "avoid_if": [
+      "fragrance or flavour sensitivity"
+    ],
+    "affiliate_url": "https://example.com/aff/lakme-lip-love",
+    "image_url": ""
   },
   {
     "id": "neutrogena-lip",
@@ -269,10 +542,21 @@
     "brand": "Neutrogena",
     "category": "Lip care",
     "price_inr": 399,
-    "key_ingredients": ["Glycerin", "Dimethicone", "UV filters"],
-    "suitable_skin_types": ["dry", "normal", "sensitive"],
-    "avoid_if": ["known filter allergies"],
-    "affiliate_url": "https://example.com/aff/neutrogena-lip"
+    "key_ingredients": [
+      "Glycerin",
+      "Dimethicone",
+      "UV filters"
+    ],
+    "suitable_skin_types": [
+      "dry",
+      "normal",
+      "sensitive"
+    ],
+    "avoid_if": [
+      "known filter allergies"
+    ],
+    "affiliate_url": "https://example.com/aff/neutrogena-lip",
+    "image_url": "https://images.ctfassets.net/3zfcttr0ztpr/3KW9jmIPdh2SFEbgnDB97N/02963c6d2c3f08a50a11f77d1f728f18/8g_000-en-gb?fm=jpg&w=1920&q=80"
   },
   {
     "id": "dotkey-eye-cream",
@@ -280,10 +564,22 @@
     "brand": "Dot & Key",
     "category": "Eye cream",
     "price_inr": 495,
-    "key_ingredients": ["Caffeine 5%", "Vitamin C", "Hyaluronic acid"],
-    "suitable_skin_types": ["normal", "combination", "dry"],
-    "avoid_if": ["very sensitive eye area", "active eye infection"],
-    "affiliate_url": "https://example.com/aff/dotkey-eye-cream"
+    "key_ingredients": [
+      "Caffeine 5%",
+      "Vitamin C",
+      "Hyaluronic acid"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "combination",
+      "dry"
+    ],
+    "avoid_if": [
+      "very sensitive eye area",
+      "active eye infection"
+    ],
+    "affiliate_url": "https://example.com/aff/dotkey-eye-cream",
+    "image_url": ""
   },
   {
     "id": "lrp-pigmentclar-eyes",
@@ -291,10 +587,21 @@
     "brand": "La Roche-Posay",
     "category": "Eye cream",
     "price_inr": 2100,
-    "key_ingredients": ["Caffeine", "Niacinamide", "Thermal spring water"],
-    "suitable_skin_types": ["normal", "dry", "sensitive"],
-    "avoid_if": ["known sensitivity around the eyes"],
-    "affiliate_url": "https://example.com/aff/lrp-pigmentclar-eyes"
+    "key_ingredients": [
+      "Caffeine",
+      "Niacinamide",
+      "Thermal spring water"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "dry",
+      "sensitive"
+    ],
+    "avoid_if": [
+      "known sensitivity around the eyes"
+    ],
+    "affiliate_url": "https://example.com/aff/lrp-pigmentclar-eyes",
+    "image_url": "https://www.laroche-posay-me.com/-/media/project/loreal/brand-sites/lrp/apac/mena/products/pigmentclar/anti-dark-circle/la-roche-posay-productpage-anti-aging-eye-cream-pigmentclar-anti-circle-15ml-3337872414152-front.png"
   },
   {
     "id": "cetaphil-body-lotion",
@@ -302,10 +609,21 @@
     "brand": "Cetaphil",
     "category": "Body lotion",
     "price_inr": 599,
-    "key_ingredients": ["Glycerin", "Niacinamide", "Panthenol"],
-    "suitable_skin_types": ["dry", "normal", "sensitive"],
-    "avoid_if": ["known sensitivity to any listed ingredient"],
-    "affiliate_url": "https://example.com/aff/cetaphil-body-lotion"
+    "key_ingredients": [
+      "Glycerin",
+      "Niacinamide",
+      "Panthenol"
+    ],
+    "suitable_skin_types": [
+      "dry",
+      "normal",
+      "sensitive"
+    ],
+    "avoid_if": [
+      "known sensitivity to any listed ingredient"
+    ],
+    "affiliate_url": "https://example.com/aff/cetaphil-body-lotion",
+    "image_url": "https://www.cetaphil.in/dw/image/v2/bggn_prd/on/demandware.static/-/Sites-galderma-in-m-catalog/default/dw1ee5a892/CML%20Revive%20A+/236ml/ATF/1.%20FoP.png?sw=900&sh=900&sm=fit&q=85"
   },
   {
     "id": "cerave-body-lotion",
@@ -313,10 +631,21 @@
     "brand": "CeraVe",
     "category": "Body lotion",
     "price_inr": 999,
-    "key_ingredients": ["Ceramides", "Hyaluronic acid", "MVE technology"],
-    "suitable_skin_types": ["dry", "normal", "sensitive"],
-    "avoid_if": ["known ceramide sensitivity"],
-    "affiliate_url": "https://example.com/aff/cerave-body-lotion"
+    "key_ingredients": [
+      "Ceramides",
+      "Hyaluronic acid",
+      "MVE technology"
+    ],
+    "suitable_skin_types": [
+      "dry",
+      "normal",
+      "sensitive"
+    ],
+    "avoid_if": [
+      "known ceramide sensitivity"
+    ],
+    "affiliate_url": "https://example.com/aff/cerave-body-lotion",
+    "image_url": "https://www.ceraveindia.com/-/media/project/loreal/brand-sites/cerave/americas/in/scx/products/new/new-packshots/moisturizing-lotion/moisturizing-lotion-236ml-in-1-lg.webp"
   },
   {
     "id": "minimalist-salicylic-cleanser",
@@ -324,10 +653,21 @@
     "brand": "Minimalist",
     "category": "Cleanser",
     "price_inr": 299,
-    "key_ingredients": ["Salicylic acid 2%", "LHA", "Zinc PCA"],
-    "suitable_skin_types": ["oily", "combination"],
-    "avoid_if": ["very dry skin", "over-exfoliation with other acids"],
-    "affiliate_url": "https://example.com/aff/minimalist-salicylic-cleanser"
+    "key_ingredients": [
+      "Salicylic acid 2%",
+      "LHA",
+      "Zinc PCA"
+    ],
+    "suitable_skin_types": [
+      "oily",
+      "combination"
+    ],
+    "avoid_if": [
+      "very dry skin",
+      "over-exfoliation with other acids"
+    ],
+    "affiliate_url": "https://example.com/aff/minimalist-salicylic-cleanser",
+    "image_url": "https://beminimalist.co/cdn/shop/files/SalicylicCleanserNew.jpg?v=1756796206"
   },
   {
     "id": "neutrogena-hydroboost",
@@ -335,10 +675,20 @@
     "brand": "Neutrogena",
     "category": "Moisturizer",
     "price_inr": 850,
-    "key_ingredients": ["Hyaluronic acid", "Glycerin"],
-    "suitable_skin_types": ["normal", "combination", "oily"],
-    "avoid_if": ["fragrance sensitivity in some variants"],
-    "affiliate_url": "https://example.com/aff/neutrogena-hydroboost"
+    "key_ingredients": [
+      "Hyaluronic acid",
+      "Glycerin"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "combination",
+      "oily"
+    ],
+    "avoid_if": [
+      "fragrance sensitivity in some variants"
+    ],
+    "affiliate_url": "https://example.com/aff/neutrogena-hydroboost",
+    "image_url": "https://images.ctfassets.net/3zfcttr0ztpr/3TfmeqVtWAAtF8LobCI3ss/8b291898dfb87d8129a513dda4efc86c/NTG_USA_US_70501110478_681104748_HB_Hyaluronic_Acid_Water_Gel_Signature_1p7oz_00000.webp?fm=jpg&w=1920&q=80"
   },
   {
     "id": "simple-sunscreen",
@@ -346,9 +696,20 @@
     "brand": "Simple",
     "category": "Sunscreen",
     "price_inr": 320,
-    "key_ingredients": ["UV filters", "Glycerin", "Pro-vitamin B5"],
-    "suitable_skin_types": ["normal", "sensitive"],
-    "avoid_if": ["needs higher SPF for strong sun", "known filter allergies"],
-    "affiliate_url": "https://example.com/aff/simple-sunscreen"
+    "key_ingredients": [
+      "UV filters",
+      "Glycerin",
+      "Pro-vitamin B5"
+    ],
+    "suitable_skin_types": [
+      "normal",
+      "sensitive"
+    ],
+    "avoid_if": [
+      "needs higher SPF for strong sun",
+      "known filter allergies"
+    ],
+    "affiliate_url": "https://example.com/aff/simple-sunscreen",
+    "image_url": "https://www.simpleskincare.in/cdn/shop/files/27275_H_1200x1200.jpg?v=1790245339"
   }
 ]

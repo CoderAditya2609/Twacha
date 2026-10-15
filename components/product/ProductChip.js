@@ -9,7 +9,13 @@ export default function ProductChip({ href, children }) {
       {product ? (
         <>
           <span className="mini">
-            <ProductVisual id={product.id} brand={product.brand} category={product.category} name={product.name} />
+            <ProductVisual
+              id={product.id}
+              brand={product.brand}
+              category={product.category}
+              name={product.name}
+              imageUrl={product.image_url}
+            />
           </span>
           <span>{product.name}</span>
           <span className="price">₹{product.price_inr}</span>

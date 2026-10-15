@@ -1,0 +1,35 @@
+
+> twacha@1.0.0 dev
+> next dev -p 3000 -H 0.0.0.0
+
+   ▲ Next.js 15.5.28
+   - Local:        http://localhost:3000
+   - Network:      http://0.0.0.0:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 8.4s
+ ○ Compiling /api/analyze ...
+ ✓ Compiled /api/analyze in 8.2s (627 modules)
+ POST /api/analyze 200 in 16552ms
+ POST /api/analyze 200 in 9287ms
+ POST /api/analyze 200 in 6028ms
+ POST /api/analyze 200 in 30691ms
+ POST /api/analyze 401 in 58ms
+ POST /api/analyze 401 in 54ms
+ POST /api/analyze 400 in 54ms
+ POST /api/analyze 400 in 148ms
+ POST /api/analyze 200 in 13057ms
+ POST /api/analyze 401 in 74ms
+ POST /api/analyze 401 in 78ms
+ POST /api/analyze 400 in 106ms
+ POST /api/analyze 400 in 138ms
+ POST /api/analyze 200 in 49456ms
+ POST /api/analyze 200 in 9616ms
+Vision observation failed: {"error":{"code":400,"message":"Unable to process input image. Please retry or report in https://developers.generativeai.google/guide/troubleshooting","status":"INVALID_ARGUMENT"}}
+ POST /api/analyze 422 in 2368ms
+ POST /api/analyze 200 in 4355ms
+ POST /api/analyze 200 in 4879ms
+ POST /api/analyze 200 in 2871ms
+ POST /api/analyze 200 in 2441ms
+ POST /api/analyze 200 in 3813ms
