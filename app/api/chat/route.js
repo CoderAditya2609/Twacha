@@ -1,6 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
 import { generateSkincareResponse } from "@/lib/ai/skincareEngine";
-import { requireUser } from "@/lib/supabase/server";
 import products from "@/data/products.json";
 
 export const runtime = "nodejs";
@@ -48,11 +47,6 @@ Never recommend harsh actives if the user has broken skin, pregnancy concerns wi
 
 export async function POST(request) {
   try {
-    const authResult = await requireUser(request);
-    if (authResult.error) {
-      return Response.json({ error: authResult.error }, { status: authResult.status || 401 });
-    }
-
     const { message, history, profile, modelChoice } = await request.json();
     if (!message || typeof message !== "string" || !message.trim()) {
       return Response.json({ error: "Please write a message first." }, { status: 400 });

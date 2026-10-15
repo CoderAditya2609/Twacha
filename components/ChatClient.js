@@ -3,8 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
-import { auth, db } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { db } from "@/lib/firebase";
 import {
   collection,
   query,
@@ -222,54 +221,12 @@ export default function ChatClient() {
   const end = useRef();
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (currentUser) => {
-      if (!currentUser) {
-        location.href = "/login";
-        return;
-      }
-      setUser(currentUser);
+    const currentUser = { uid: "anonymous" };
+    setUser(currentUser);
 
-      try {
-        // Prefill the composer when arriving from "Ask Claire about this"
-        const ask = searchParams.get("ask");
-        if (ask) setInput(ask);
-
-        // Load user skincare profile
-        const profSnap = await getDoc(doc(db, "profiles", currentUser.uid));
-        if (!profSnap.exists()) {
-          location.href = "/onboarding";
-          return;
-        }
-        setProfile(profSnap.data());
-
-        // "New chat" starts empty instead of restoring history
-        if (searchParams.get("new") === "1") {
-          setLoading(false);
-          return;
-        }
-
-        // Load chat history from Firestore
-        const q = query(
-          collection(db, "messages"),
-          where("user_id", "==", currentUser.uid),
-          limit(60)
-        );
-        const querySnapshot = await getDocs(q);
-        const loaded = [];
-        querySnapshot.forEach((d) => {
-          loaded.push({ id: d.id, ...d.data() });
-        });
-        loaded.sort((a, b) => (a.createdAt || "").localeCompare(b.createdAt || ""));
-        setMessages(loaded);
-        setHistory(loaded);
-      } catch (err) {
-        console.warn("Could not load initial chat data:", err);
-      } finally {
-        setLoading(false);
-      }
-    });
-
-    return () => unsub();
+    const ask = searchParams.get("ask");
+    if (ask) setInput(ask);
+    setLoading(false);
   }, [searchParams]);
 
   useEffect(() => {

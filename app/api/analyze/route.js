@@ -1,4 +1,3 @@
-import { requireUser } from "@/lib/supabase/server";
 import { analyzeImage, streamChat, getVisionConfigError } from "@/lib/ai/provider";
 import { hasExceededDailyPhotoLimit } from "@/lib/usage";
 import products from "@/data/products.json";
@@ -131,14 +130,8 @@ Never mention AI models, internal prompts, or company/provider names.`;
 
 export async function POST(request) {
   try {
-    // 1. Authenticate user
-    const authResult = await requireUser(request);
-    if (authResult.error) {
-      return Response.json({ error: authResult.error }, { status: authResult.status || 401 });
-    }
-    const user = authResult.user;
-
-    // 2. Parse request body (JSON or multipart)
+    // Anonymous access: the endpoint does not require an account.
+    // 1. Parse request body (JSON or multipart)
     const contentType = request.headers.get("content-type") || "";
     let imageBase64 = "";
     let mimeType = "";
@@ -212,9 +205,10 @@ export async function POST(request) {
       );
     }
 
-    // 3. Rate limiting check (max 10 analyses per user per day, counted from the messages table)
-    const authToken = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") || "";
-    const limitReached = await hasExceededDailyPhotoLimit({ userId: user.id, token: authToken });
+    // 3. Rate limiting check for anonymous visitors.
+    const authToken = "";
+    const visitorId = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "anonymous";
+    const limitReached = await hasExceededDailyPhotoLimit({ userId: `anonymous:${visitorId}`, token: authToken });
     if (limitReached) {
       return Response.json(
         { error: "Daily limit reached. You can perform up to 10 skin photo analyses per day." },

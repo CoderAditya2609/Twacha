@@ -3,24 +3,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { auth } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
 import Atmosphere from "@/components/fx/Atmosphere";
 import CursorGlow from "@/components/fx/CursorGlow";
 import Sidebar from "@/components/Sidebar";
 
 export default function SiteShell({ children, flush = false }) {
-  const [user, setUser] = useState(null);
   const [drawer, setDrawer] = useState(false);
   const pathname = usePathname();
   const reduce = useReducedMotion();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser || null);
-    });
-    return () => unsubscribe();
-  }, []);
 
   useEffect(() => {
     setDrawer(false);
@@ -67,14 +57,9 @@ export default function SiteShell({ children, flush = false }) {
           >
             <span />
           </button>
-          <Link href={user ? "/chat" : "/"} className="topbar-wordmark">
+          <Link href="/chat" className="topbar-wordmark">
             Twacha
           </Link>
-          {!user && (
-            <Link href="/login" className="btn topbar-signin">
-              Sign in
-            </Link>
-          )}
         </header>
 
         <div id="content" className={flush ? "page flush" : "page"}>

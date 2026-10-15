@@ -192,11 +192,7 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile }) {
               Logout
             </button>
           </>
-        ) : (
-          <Link href="/login" className="btn side-signin" onClick={onCloseMobile}>
-            Sign in
-          </Link>
-        )}
+  ) : null}
       </div>
     </aside>
   );

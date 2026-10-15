@@ -8,7 +8,7 @@ import TiltCard from "@/components/ui/TiltCard";
 
 const headline = ["Care", "that", "feels", "like", "you."];
 
-export default function LandingView({ signedIn = false }) {
+export default function LandingView() {
   const reduce = useReducedMotion();
   const heroRef = useRef(null);
   const cardRef = useRef(null);
@@ -57,8 +57,8 @@ export default function LandingView({ signedIn = false }) {
             Claire, Twacha&rsquo;s skincare assistant, uses your routine, skin needs, lifestyle and budget to help you make calmer, more informed choices.
           </motion.p>
           <motion.div initial={reduce ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75, duration: 0.6 }}>
-            <Link className="btn" href={signedIn ? "/chat" : "/login"}>
-              {signedIn ? "Continue your ritual" : "Enter the atelier"}
+            <Link className="btn" href="/chat">
+              Enter the atelier
             </Link>
           </motion.div>
         </div>
